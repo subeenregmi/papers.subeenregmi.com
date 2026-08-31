@@ -12,3 +12,9 @@ replit.nix
 .quartz/
 quartz/cli/tui/dist/
 .turbo/
+
+# Vault assets that must not reach a public repo
+content/**/*.pdf
+content/**/*.ipynb
+content/**/*.txt
+content/**/.ipynb_checkpoints/

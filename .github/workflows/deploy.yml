@@ -1,0 +1,18 @@
+name: Deploy to homeserver
+
+on:
+  push:
+    branches: [v5]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger deployment via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOMESERVER_SSH_HOST }}
+          username: ${{ secrets.HOMESERVER_SSH_USER }}
+          key: ${{ secrets.HOMESERVER_SSH_KEY }}
+          port: ${{ secrets.HOMESERVER_SSH_PORT }}

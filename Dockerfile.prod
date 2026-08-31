@@ -1,0 +1,20 @@
+# Upstream's Dockerfile runs "quartz build --serve", which injects a
+# hot-reload websocket to localhost:3001 into every page. That is a preview
+# server, so build the site here and serve the output with caddy instead.
+FROM node:22-slim AS builder
+
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+COPY package.json .
+COPY package-lock.json* .
+COPY .npmrc* .
+COPY quartz/ ./quartz/
+COPY quartz.lock.json* .
+RUN npm install; npx quartz plugin install
+COPY . .
+RUN npx quartz build
+
+FROM caddy:2-alpine
+COPY --from=builder /usr/src/app/public /srv
+COPY Caddyfile /etc/caddy/Caddyfile
